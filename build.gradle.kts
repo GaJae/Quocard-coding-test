@@ -72,7 +72,8 @@ jooq {
 			}
 
 			target {
-				packageName = "org.example.db"
+				packageName = "com.example.db"
+				directory = "src/main/kotlin"
 			}
 		}
 	}

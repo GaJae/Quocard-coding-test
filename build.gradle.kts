@@ -11,6 +11,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.7"
 	id("org.jooq.jooq-codegen-gradle") version  "3.19.11"
 	id("org.flywaydb.flyway") version "10.10.0"
+
 }
 
 group = "com.example"
@@ -42,6 +43,9 @@ dependencies {
 	implementation("org.jooq:jooq-codegen")
 	implementation("org.jooq:jooq-postgres-extensions:3.19.11")
 	jooqCodegen("org.postgresql:postgresql:42.7.3")
+	testImplementation("org.mockito:mockito-core:4.5.1")
+	testImplementation("org.mockito:mockito-inline:4.5.1")
+	testImplementation("com.h2database:h2")
 }
 
 kotlin {
@@ -51,7 +55,8 @@ kotlin {
 }
 
 tasks.withType<Test> {
-	useJUnitPlatform()
+    useJUnitPlatform()
+    jvmArgs?.plusAssign("-javaagent:${configurations.testRuntimeClasspath.get().find { it.name.contains("mockito-inline") }!!.absolutePath}")
 }
 
 jooq {

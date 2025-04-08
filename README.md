@@ -114,6 +114,7 @@ KR
    
    2. Flyway 마이그레이션을 실행하여 데이터베이스 테이블을 생성하고 jOOQ 코드 생성을 실행합니다.
    ```
+   ./gradlew flywayRepair
    ./gradlew flywayMigrate
    ./gradlew jooqCodegen
    ``` 

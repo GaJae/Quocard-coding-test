@@ -3,6 +3,7 @@ package com.example.BookNest.controller
 
 import com.example.BookNest.service.BookService
 import com.example.db.tables.records.BooksRecord
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -20,4 +21,10 @@ class BookController(private val bookService: BookService) {
 
     @DeleteMapping("/{id}")
     fun deleteBook(@PathVariable id: Int): Boolean = bookService.deleteBook(id)
+
+    @GetMapping
+    fun getAllBooks(): ResponseEntity<List<BooksRecord>> {
+        val books = bookService.getAllBooks()
+        return ResponseEntity.ok(books)
+    }
 }

@@ -71,8 +71,8 @@ jooq {
 		generator {
 			database {
 				name = "org.jooq.meta.postgres.PostgresDatabase"
-				inputSchema = "public"
 				includes = ".*"
+				inputSchema = "public"
 				excludes = "flyway_schema_history"
 			}
 

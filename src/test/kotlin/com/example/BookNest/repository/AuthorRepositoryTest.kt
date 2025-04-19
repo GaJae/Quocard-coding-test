@@ -3,14 +3,12 @@ package com.example.BookNest.repository
 import com.example.db.Tables
 import com.example.db.tables.records.AuthorsRecord
 import org.jooq.DSLContext
-import org.jooq.InsertSetStep
 import org.jooq.SelectWhereStep
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
 import org.springframework.boot.test.context.SpringBootTest
-import java.time.LocalDate
 
 @SpringBootTest
 class AuthorRepositoryTest {
@@ -21,6 +19,7 @@ class AuthorRepositoryTest {
     @BeforeEach
     fun setUp() {
         dsl = mock(DSLContext::class.java)
+        dsl.settings().withRenderSchema(true)
         authorRepository = AuthorRepository(dsl)
     }
 

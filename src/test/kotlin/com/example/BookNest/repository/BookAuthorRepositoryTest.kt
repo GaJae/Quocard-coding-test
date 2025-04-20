@@ -91,4 +91,20 @@ class BookAuthorRepositoryTest @Autowired constructor(
         assertEquals(1, result.size)
         assertEquals(1L, result[0])
     }
+
+    @Test
+    fun `updateBookAuthor updates the author ID for a given book`() {
+        // 초기 데이터 삽입
+        bookAuthorRepository.addBookAuthor(1L, 1L)
+
+        // 업데이트 실행
+        val result = bookAuthorRepository.updateBookAuthor(1L, 1L, 2L)
+
+        // 결과 검증
+        assertEquals(1, result) // 업데이트된 행의 수 확인
+        val records = dslContext.selectFrom(com.example.db.Tables.BOOK_AUTHOR).fetch()
+        assertEquals(1, records.size) // 레코드 수 확인
+        assertEquals(1L, records[0].bookId) // 책 ID 확인
+        assertEquals(2L, records[0].authorId) // 업데이트된 저자 ID 확인
+    }
 }

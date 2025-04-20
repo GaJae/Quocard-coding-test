@@ -1,5 +1,6 @@
 package com.example.BookNest.service
 
+import com.example.BookNest.dto.BookDTO
 import com.example.BookNest.repository.BookRepository
 import com.example.db.tables.records.BooksRecord
 import org.junit.jupiter.api.Assertions.*
@@ -24,16 +25,22 @@ class BookServiceTest {
         bookService = BookService(bookRepository)
     }
 
-    @Test
-    fun `saveBook should return saved book`() {
-        val book = BooksRecord(1, "Test Book", 1000, "UNPUBLISHED")
-        `when`(bookRepository.save(book)).thenReturn(book)
+@Test
+fun `saveBook should return saved book`() {
+val bookDTO = BookDTO(
+    id = 1, // id 값 추가
+    title = "Test Book",
+    price = 1000,
+    status = "UNPUBLISHED"
+)
+    val savedBook = BooksRecord(1, "Test Book", 1000, "UNPUBLISHED")
+    `when`(bookRepository.save(bookDTO)).thenReturn(savedBook)
 
-        val result = bookService.saveBook(book)
+    val result = bookService.saveBook(bookDTO)
 
-        assertEquals(book, result)
-        verify(bookRepository).save(book)
-    }
+    assertEquals(savedBook, result)
+    verify(bookRepository).save(bookDTO)
+}
 
     @Test
     fun `getBookById should return book when found`() {
@@ -46,17 +53,17 @@ class BookServiceTest {
         verify(bookRepository).findById(1)
     }
 
-    @Test
-    fun `updateBook should throw exception when changing status from '出版済み' to '未出版'`() {
-        val book = BooksRecord(1, "Book 1", 1000, "出版済み")
-        `when`(bookService.getBookById(1)).thenReturn(book)
+@Test
+fun `updateBook should throw exception when changing status from '出版済み' to '未出版'`() {
+    val book = BooksRecord(1, "Book 1", 1000, "出版済み")
+    `when`(bookRepository.findById(1)).thenReturn(book)
 
-        val exception = assertThrows<IllegalStateException> {
-            bookService.updateBook(1, BooksRecord(1, "Book 1", 1000, "未出版"))
-        }
-
-        assertEquals("Cannot change status from '出版済み' to '未出版'", exception.message)
+    val exception = assertThrows<IllegalStateException> {
+      bookService.updateBook(1, BookDTO(id = 1, title = "Book 1", price = 1000, status = "未出版"))
     }
+
+    assertEquals("Cannot change status from '出版済み' to '未出版'", exception.message)
+}
 
     @Test
     fun `deleteBook should remove the book`() {

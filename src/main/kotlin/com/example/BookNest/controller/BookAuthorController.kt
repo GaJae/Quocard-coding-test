@@ -35,4 +35,17 @@ class BookAuthorController(private val bookAuthorService: BookAuthorService) {
     fun getBooksByAuthorId(@RequestParam authorId: Long): ResponseEntity<List<Long>> {
         return ResponseEntity.ok(bookAuthorService.getBooksByAuthorId(authorId))
     }
+
+    @PutMapping
+    fun updateBookAuthor(
+        @RequestParam bookId: Long,
+        @RequestParam authorId: Long,
+        @RequestParam newAuthorId: Long
+    ): ResponseEntity<String> {
+        return if (bookAuthorService.updateBookAuthor(bookId, authorId, newAuthorId)) {
+            ResponseEntity.ok("Book-Author relation updated successfully.")
+        } else {
+            ResponseEntity.badRequest().body("Failed to update Book-Author relation.")
+        }
+    }
 }

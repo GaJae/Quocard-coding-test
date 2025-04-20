@@ -21,4 +21,7 @@ class BookAuthorService(private val bookAuthorRepository: BookAuthorRepository) 
     fun getBooksByAuthorId(authorId: Long): List<Long> {
         return bookAuthorRepository.findBooksByAuthorId(authorId)
     }
+    fun updateBookAuthor(bookId: Long, authorId: Long, newAuthorId: Long): Boolean {
+        return bookAuthorRepository.updateBookAuthor(bookId, authorId, newAuthorId) > 0
+    }
 }

@@ -34,4 +34,11 @@ class BookAuthorRepository(private val dsl: DSLContext) {
             .where(Tables.BOOK_AUTHOR.AUTHOR_ID.eq(authorId))
             .fetchInto(Long::class.java)
     }
+    fun updateBookAuthor(bookId: Long, authorId: Long, newAuthorId: Long): Int {
+        return dsl.update(Tables.BOOK_AUTHOR)
+            .set(Tables.BOOK_AUTHOR.AUTHOR_ID, newAuthorId)
+            .where(Tables.BOOK_AUTHOR.BOOK_ID.eq(bookId))
+            .and(Tables.BOOK_AUTHOR.AUTHOR_ID.eq(authorId))
+            .execute()
+    }
 }

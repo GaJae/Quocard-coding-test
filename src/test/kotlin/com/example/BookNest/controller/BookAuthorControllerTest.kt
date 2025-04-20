@@ -20,6 +20,7 @@ class BookAuthorControllerTest {
     @MockBean
     private lateinit var bookAuthorService: BookAuthorService
 
+
     @Test
     fun `addBookAuthor should return success response`() {
         `when`(bookAuthorService.addBookAuthor(1L, 2L)).thenReturn(true)
@@ -72,5 +73,35 @@ class BookAuthorControllerTest {
         )
             .andExpect(status().isOk)
             .andExpect(content().json("[1, 4]"))
+    }
+
+    @Test
+    fun `updateBookAuthor should return success response`() {
+        `when`(bookAuthorService.updateBookAuthor(1L, 1L, 2L)).thenReturn(true)
+
+        mockMvc.perform(
+            put("/api/book-author")
+                .param("bookId", "1")
+                .param("authorId", "1")
+                .param("newAuthorId", "2")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().string("Book-Author relation updated successfully."))
+    }
+
+    @Test
+    fun `updateBookAuthor should return failure response`() {
+        `when`(bookAuthorService.updateBookAuthor(1L, 1L, 2L)).thenReturn(false)
+
+        mockMvc.perform(
+            put("/api/book-author")
+                .param("bookId", "1")
+                .param("authorId", "1")
+                .param("newAuthorId", "2")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().string("Failed to update Book-Author relation."))
     }
 }

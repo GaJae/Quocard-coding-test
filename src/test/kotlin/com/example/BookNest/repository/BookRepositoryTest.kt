@@ -1,5 +1,6 @@
 package com.example.BookNest.repository
 
+import com.example.BookNest.dto.BookDTO
 import com.example.db.tables.records.BooksRecord
 import org.jooq.DSLContext
 import org.junit.jupiter.api.Assertions.*
@@ -30,84 +31,96 @@ class BookRepositoryTest @Autowired constructor(
         dslContext.execute("TRUNCATE TABLE public.books")
     }
 
-    @Test
-    fun `findAll returns all books`() {
-        val book1 = BooksRecord().apply {
-            title = "Book One"
-            price = 1000
-            status = "Available"
-        }
-        val book2 = BooksRecord().apply {
-            title = "Book Two"
-            price = 2000
-            status = "Sold Out"
-        }
-        bookRepository.save(book1)
-        bookRepository.save(book2)
+@Test
+fun `findAll returns all books`() {
+val book1 = BookDTO(
+    id = 1, // id 값 추가
+    title = "Book One",
+    price = 1000,
+    status = "Available"
+)
+val book2 = BookDTO(
+    id = 2, // id 값 추가
+    title = "Book Two",
+    price = 2000,
+    status = "Sold Out"
+)
+    bookRepository.save(book1)
+    bookRepository.save(book2)
 
-        val books = bookRepository.findAll()
+    val books = bookRepository.findAll()
 
-        assertEquals(2, books.size)
-        assertEquals("Book One", books[0].title)
-        assertEquals("Book Two", books[1].title)
-    }
+    assertEquals(2, books.size)
+    assertEquals("Book One", books[0].title)
+    assertEquals("Book Two", books[1].title)
+}
 
-    @Test
-    fun `findById returns the correct book`() {
-        val book = BooksRecord().apply {
-            title = "Test Book"
-            price = 1500
-            status = "Available"
-        }
-        val savedBook = bookRepository.save(book)
+@Test
+fun `findById returns the correct book`() {
+val book = BookDTO(
+    id = 1, // id 값 추가
+    title = "Test Book",
+    price = 1500,
+    status = "Available"
+)
+    val savedBook = bookRepository.save(book)
 
-        val foundBook = bookRepository.findById(savedBook.id)
+    val foundBook = bookRepository.findById(savedBook.id)
 
-        assertNotNull(foundBook)
-        assertEquals(savedBook.title, foundBook?.title)
-    }
+    assertNotNull(foundBook)
+    assertEquals(savedBook.title, foundBook?.title)
+}
 
-    @Test
-    fun `save inserts a new book`() {
-        val book = BooksRecord().apply {
-            title = "New Book"
-            price = 1200
-            status = "Available"
-        }
+@Test
+fun `save inserts a new book`() {
+val book = BookDTO(
+    id = 1, // id 값 추가
+    title = "New Book",
+    price = 1200,
+    status = "Available"
+)
 
-        val savedBook = bookRepository.save(book)
+    val savedBook = bookRepository.save(book)
 
-        assertNotNull(savedBook)
-        assertEquals(book.title, savedBook.title)
-    }
+    assertNotNull(savedBook)
+    assertEquals(book.title, savedBook.title)
+}
 
-    @Test
-    fun `update modifies an existing book`() {
-        val book = BooksRecord().apply {
-            title = "Old Title"
-            price = 1000
-            status = "Available"
-        }
-        val savedBook = bookRepository.save(book)
+@Test
+fun `update modifies an existing book`() {
+val book = BookDTO(
+    id = 1, // id 값 추가
+    title = "Old Title",
+    price = 1000,
+    status = "Available"
+)
+    val savedBook = bookRepository.save(book)
 
-        savedBook.title = "Updated Title"
-        val updatedBook = bookRepository.update(savedBook)
+    val updatedBook = bookRepository.update(
+        savedBook.id, // id 전달
+BookDTO(
+    id = savedBook.id, // id 값 추가
+    title = "Updated Title",
+    price = savedBook.price,
+    status = savedBook.status
+)
+    )
 
-        assertEquals("Updated Title", updatedBook.title)
-    }
+    assertEquals("Updated Title", updatedBook.title)
+}
+@Test
+fun `deleteById removes the book`() {
+val book = BookDTO(
+    id = 1, // id 값 추가
+    title = "Book To Delete",
+    price = 800,
+    status = "Available"
+)
+    val savedBook = bookRepository.save(book)
 
-    @Test
-    fun `deleteById removes the book`() {
-        val book = BooksRecord().apply {
-            title = "Book To Delete"
-            price = 800
-            status = "Available"
-        }
-        val savedBook = bookRepository.save(book)
+    val isDeleted = bookRepository.deleteById(savedBook.id)
 
-        val isDeleted = bookRepository.deleteById(savedBook.id)
-
-        assertTrue(isDeleted)
-        assertTrue(bookRepository.findAll().isEmpty())
-    }
+    assertTrue(isDeleted)
+    assertTrue(bookRepository.findAll().isEmpty())
+}
 }
